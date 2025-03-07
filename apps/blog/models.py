@@ -3,7 +3,7 @@ import uuid
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
-
+from django_ckeditor_5.fields import CKEditor5Field
 
 
 def blog_thumbnail_directory(instance, filename):
@@ -22,7 +22,7 @@ class Category(models.Model): #categorias dinamicas
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     name = models.CharField(max_length=255)
     title = models.CharField(max_length=255, null=True, blank=True)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     thumbnail = models.ImageField(upload_to=category_thumbnail_directory)
     slug = models.CharField(max_length=128)
 
@@ -47,7 +47,7 @@ class Post(models.Model):
 
     title = models.CharField(max_length=128)
     description = models.CharField(max_length=256)
-    content = models.TextField()
+    content = CKEditor5Field('Content', config_name='default')
     thumbnail = models.ImageField(upload_to=blog_thumbnail_directory)
 
     keywords = models.CharField(max_length=128)
@@ -69,6 +69,7 @@ class Post(models.Model):
     def __str__(self):
         return self.title
     
+
 
 class Headding(models.Model):
     # asasas
