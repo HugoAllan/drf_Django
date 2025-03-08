@@ -58,8 +58,6 @@ class Post(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
-    views = models.IntegerField(default=0)
-
     status = models.CharField(max_length=15, choices=status_options, default='draft')
 
     objects = models.Manager() # The default manager
@@ -70,10 +68,16 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
-    
 
 
-class Headding(models.Model):
+class PostView(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    post = models.ForeignKey(Post, on_delete=models.PROTECT, related_name='post_view')
+    ip_address = models.GenericIPAddressField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+
+class Heading(models.Model):
     # asasas
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -101,6 +105,12 @@ class Headding(models.Model):
         super().save(args, **kwargs)
 
 
-
+class PostAnalytics(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    post = models.ForeignKey(Post, on_delete=models.PROTECT, related_name='post_analytics')
+    vistas = models.PositiveIntegerField(default=0)
+    impresiones = models.PositiveIntegerField(default=0)
+    clicks = models.PositiveIntegerField(default=0)
+    click_trought_rate = models.PositiveIntegerField(default=0)
 
 

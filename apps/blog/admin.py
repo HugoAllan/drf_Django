@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django import forms
-from .models import Category, Post, Headding
+from .models import Category, Post, Heading
 
 
 # Register your models here.
@@ -15,7 +15,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 class HeadingInline(admin.TabularInline):
-    model = Headding
+    model = Heading
     extra = 1
     fields = ('title', 'level', 'order','slug')
     prepopulated_fields = {'slug':('title',)}
@@ -29,7 +29,7 @@ class PostAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug':('title',)}
     list_filter = ('status', 'category', 'updated_at',)
     ordering= ('-created_at', )
-    readonly_fields=('id', 'created_at', 'updated_at', 'views')
+    readonly_fields=('id', 'created_at', 'updated_at')
     fieldsets = (
         ('General Information', {
             'fields':('title', 'description', 'content', 'thumbnail', 'keywords', 'slug', 'category')
