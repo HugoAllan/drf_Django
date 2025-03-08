@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django import forms
-from django_ckeditor_5.widgets import CKEditor5Widget
 from .models import Category, Post, Headding
 
 
@@ -15,25 +14,22 @@ class CategoryAdmin(admin.ModelAdmin):
     readonly_fields=('id', )
 
 
-class PostAdminForm(forms.ModelForm):
-    content = forms.CharField(widget=CKEditor5Widget(config_name='default'))
-
-    class Meta:
-        model = Post
-        fields = '__all__'
-
+class HeadingInline(admin.TabularInline):
+    model = Headding
+    extra = 1
+    fields = ('title', 'level', 'order','slug')
+    prepopulated_fields = {'slug':('title',)}
+    ordering = ('order',)
 
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    form = PostAdminForm
-
     list_display = ('title', 'status', 'category', 'created_at', 'updated_at')
     search_fields = ('title', 'description', 'content', 'keywords', 'slug')
     prepopulated_fields = {'slug':('title',)}
     list_filter = ('status', 'category', 'updated_at',)
     ordering= ('-created_at', )
-    readonly_fields=('id', 'created_at', 'updated_at',)
+    readonly_fields=('id', 'created_at', 'updated_at', 'views')
     fieldsets = (
         ('General Information', {
             'fields':('title', 'description', 'content', 'thumbnail', 'keywords', 'slug', 'category')
@@ -42,3 +38,12 @@ class PostAdmin(admin.ModelAdmin):
             'fields':('status', 'created_at', 'updated_at')
         }),
     )
+    inlines = [HeadingInline]
+
+# @admin.register(Headding)
+# class PostHeadding(admin.ModelAdmin):
+#     list_display = ('title', 'post', 'level', 'order')
+#     search_fields = ('title', 'post__title')
+#     list_filter = ('level', 'post',)
+#     ordering= ('post', 'order', )
+#     prepopulated_fields = {'slug':('title',)}

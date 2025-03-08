@@ -1,6 +1,4 @@
 from rest_framework import serializers
-
-
 from .models import Post, Category, Headding
 
 
@@ -20,6 +18,7 @@ class PostListSerializer(serializers.ModelSerializer):
             'thumbnail',
             'slug',
             'category',
+            'views'
         ]
 
 
